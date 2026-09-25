@@ -56,7 +56,7 @@ The application provides a complete shopping experience where users can register
 
 The application follows a Servlet MVC architecture with a JDBC-based DAO layer.
 
-``text
+```text
                     USER
                      |
                      v
