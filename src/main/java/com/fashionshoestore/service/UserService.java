@@ -22,4 +22,8 @@ public class UserService {
     public User getUserById(int userId) {
         return userDAO.getUserById(userId);
     }
+
+    public boolean updateProfile(User user) {
+        return userDAO.updateProfile(user);
+    }
 }

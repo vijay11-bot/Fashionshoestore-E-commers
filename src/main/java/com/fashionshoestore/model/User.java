@@ -1,42 +1,63 @@
 package com.fashionshoestore.model;
 
-public class User {
+import java.io.Serializable;
 
-    private int id;
-    private String name;
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private int userId;
+    private String fullName;
     private String email;
-    private String password;
     private String phone;
+    private String password;
+    private String gender;
     private String address;
 
     public User() {
     }
 
-    public User(int id, String name, String email,
-                String password, String phone, String address) {
-
-        this.id = id;
-        this.name = name;
+    public User(int userId, String fullName, String email, String phone, String password, String gender, String address) {
+        this.userId = userId;
+        this.fullName = fullName;
         this.email = email;
-        this.password = password;
         this.phone = phone;
+        this.password = password;
+        this.gender = gender;
         this.address = address;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    // Convenience alias for existing JSP compatibility
     public int getId() {
-        return id;
+        return userId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.userId = id;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    // Convenience alias for existing JSP compatibility
     public String getName() {
-        return name;
+        return fullName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.fullName = name;
     }
 
     public String getEmail() {
@@ -47,6 +68,14 @@ public class User {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -55,12 +84,12 @@ public class User {
         this.password = password;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getGender() {
+        return gender;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {

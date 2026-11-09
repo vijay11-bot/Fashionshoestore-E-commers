@@ -2,8 +2,8 @@ package com.fashionshoestore.controller;
 
 import java.io.IOException;
 
+import com.fashionshoestore.dao.UserDAO;
 import com.fashionshoestore.model.User;
-import com.fashionshoestore.service.UserService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,14 +13,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+public class LoginController extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    private UserService userService = new UserService();
+    private final UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     @Override
@@ -32,11 +33,11 @@ public class LoginServlet extends HttpServlet {
 
         if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
             request.setAttribute("error", "Email and password are required.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
 
-        User user = userService.loginUser(email.trim(), password);
+        User user = userDAO.loginUser(email.trim(), password);
 
         if (user != null) {
             HttpSession session = request.getSession();
@@ -46,11 +47,11 @@ public class LoginServlet extends HttpServlet {
             if (redirect != null && !redirect.trim().isEmpty()) {
                 response.sendRedirect(redirect);
             } else {
-                response.sendRedirect("index.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
             }
         } else {
             request.setAttribute("error", "Invalid email or password.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
     }
 }

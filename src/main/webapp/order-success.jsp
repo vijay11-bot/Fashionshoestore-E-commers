@@ -1,353 +1,158 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@ page import="com.fashionshoestore.model.Order" %>
+<%@ page import="com.fashionshoestore.model.User" %>
 <%
-    com.fashionshoestore.model.User loggedUser =
-        (com.fashionshoestore.model.User)
-        session.getAttribute("user");
+    User loggedUser = (User) session.getAttribute("user");
+    Order order = (Order) request.getAttribute("order");
+    Integer orderId = (Integer) request.getAttribute("orderId");
+    if (orderId == null && order != null) {
+        orderId = order.getOrderId();
+    }
 %>
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
-    <title>Order Successful - Sole Mate</title>
-
-    <link rel="stylesheet" href="css/style.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | Sole Mate</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-
         .success-page {
-            min-height: 70vh;
+            min-height: 65vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 70px 20px;
+            justify-content: center;
+            padding: 50px 20px;
         }
-
         .success-card {
-            max-width: 600px;
+            background: #fff;
+            max-width: 580px;
             width: 100%;
-            background: #ffffff;
+            padding: 50px 35px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.07);
             text-align: center;
-            padding: 55px 40px;
-            border-radius: 18px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
         }
-
-        .success-icon {
+        .checkmark-circle {
             width: 80px;
             height: 80px;
-            margin: 0 auto 25px;
             border-radius: 50%;
-            background: #f3eadf;
+            background: #eafaf1;
+            color: #27ae60;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
         }
-
-        .success-icon svg {
-            width: 42px;
-            height: 42px;
-            stroke: #8a5a2b;
-        }
-
         .success-card h1 {
             font-family: 'DM Serif Display', serif;
-            font-size: 44px;
-            margin-bottom: 15px;
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: #222;
         }
-
         .success-card p {
-            color: #777;
-            line-height: 1.7;
-            margin-bottom: 10px;
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
         }
-
-        .order-number {
-            margin: 25px 0;
-            padding: 15px;
-            background: #f8f5f0;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .success-buttons {
+        .order-badge-box {
+            background: #fdfaf6;
+            border: 1.5px dashed #d5c8be;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 30px;
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
+        }
+        .order-stat {
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .stat-val {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+        .btn-group {
+            display: flex;
             gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
+            justify-content: center;
         }
-
-        .success-buttons a {
-            text-decoration: none;
-            padding: 13px 25px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .primary-btn {
+        .btn-primary {
             background: #222;
             color: #fff;
+            padding: 13px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
         }
-
-        .secondary-btn {
-            border: 1px solid #222;
-            color: #222;
-            background: #fff;
+        .btn-primary:hover {
+            background: #8a5a2b;
         }
-
-        .success-buttons a:hover {
-            opacity: 0.85;
+        .btn-secondary {
+            background: #f3eadf;
+            color: #8a5a2b;
+            padding: 13px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
         }
-
-        @media (max-width: 600px) {
-
-            .success-card {
-                padding: 40px 20px;
-            }
-
-            .success-card h1 {
-                font-size: 36px;
-            }
-
+        .btn-secondary:hover {
+            background: #e5d7c8;
         }
-
     </style>
-
 </head>
-
 <body>
 
-<!-- NAVBAR -->
+    <jsp:include page="/includes/navbar.jsp" />
 
-<!-- ================= COMMON HEADER ================= -->
+    <div class="success-page">
+        <div class="success-card">
+            <div class="checkmark-circle">&#10004;</div>
+            <h1>Thank You for Your Order!</h1>
+            <p>Your footwear order has been placed successfully and is now being prepared for express delivery.</p>
 
-<header class="site-header">
-
-    <div class="header-container">
-
-        <!-- LOGO -->
-        <a href="index.jsp" class="active">
-
-            <div class="brand-box">
-                SM
-            </div>
-
-            <div class="brand-text">
-
-                <div class="brand-name">
-                    SOLE MATE
+            <div class="order-badge-box">
+                <div class="order-stat">
+                    <div class="stat-label">Order Number</div>
+                    <div class="stat-val">#SM-<%= orderId != null ? orderId : "1001" %></div>
                 </div>
-
-                <div class="brand-tagline">
-                    STEP INTO STYLE
+                <div class="order-stat">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-val" style="color: #27ae60;">Confirmed</div>
                 </div>
-
+                <% if (order != null) { %>
+                    <div class="order-stat">
+                        <div class="stat-label">Total Amount</div>
+                        <div class="stat-val">&#8377;<%= String.format("%.2f", order.getTotalAmount()) %></div>
+                    </div>
+                <% } %>
             </div>
 
-        </a>
-
-
-        <!-- NAVIGATION -->
-
-        <nav class="main-nav">
-
-            <a href="index.jsp">
-                HOME
-            </a>
-
-            <a href="products">
-                SHOP
-            </a>
-
-            <a href="products?category=Men">
-                MEN
-            </a>
-
-            <a href="products?category=Women">
-                WOMEN
-            </a>
-
-            <a href="products?category=Kids">
-                KIDS
-            </a>
-
-            <a href="products">
-                NEW ARRIVALS
-            </a>
-
-            <a href="products">
-                SALE
-            </a>
-
-        </nav>
-
-
-        <!-- ACCOUNT -->
-
-        <div class="header-actions">
-
-            <% if (loggedUser != null) { %>
-
-                <span class="header-user">
-                    Hi, <%= loggedUser.getName() %>
-                </span>
-
-                <a href="my-orders">
-                    My Orders
-                </a>
-
-                <a href="wishlist">
-                    Wishlist
-                </a>
-
-                <a href="logout">
-                    Logout
-                </a>
-
-            <% } else { %>
-
-                <a href="login.jsp">
-                    Login
-                </a>
-
-                <a href="register.jsp">
-                    Register
-                </a>
-
-            <% } %>
-
-            <a href="cart">
-                Cart
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<!-- SUCCESS -->
-
-<section class="success-page">
-
-    <div class="success-card">
-
-        <div class="success-icon">
-
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2">
-
-                <path d="M5 12l4 4L19 6"></path>
-
-            </svg>
-
-        </div>
-
-
-        <h1>Order Placed!</h1>
-
-        <p>
-            Thank you for shopping with Sole Mate.
-        </p>
-
-        <p>
-            Your order has been successfully placed.
-            We will process it shortly.
-        </p>
-
-
-        <%
-
-            String orderId =
-                request.getParameter("orderId");
-
-            if (orderId != null) {
-
-        %>
-
-            <div class="order-number">
-
-                Order Number:
-                #<%= orderId %>
-
+            <div class="btn-group">
+                <% if (orderId != null) { %>
+                    <a href="<%= request.getContextPath() %>/order-details?orderIdQueue=<%= orderId %>&orderId=<%= orderId %>" class="btn-primary">View Order Details</a>
+                <% } %>
+                <a href="<%= request.getContextPath() %>/my-orders" class="btn-secondary">My Orders</a>
+                <a href="<%= request.getContextPath() %>/products" class="btn-primary">Continue Shopping</a>
             </div>
-
-        <%
-
-            }
-
-        %>
-
-
-        <div class="success-buttons">
-
-            <a href="my-orders"
-               class="primary-btn">
-
-                VIEW MY ORDERS
-
-            </a>
-
-
-            <a href="products"
-               class="secondary-btn">
-
-                CONTINUE SHOPPING
-
-            </a>
-
         </div>
-
     </div>
 
-</section>
-
-
-<!-- FOOTER -->
-
-<footer>
-
-    <div class="footer-logo">
-
-        <h2>SOLE MATE</h2>
-
-        <p>
-            Step into style. Walk with confidence.
-        </p>
-
-    </div>
-
-    <div class="footer-links">
-
-        <a href="products">Shop</a>
-        <a href="cart">Cart</a>
-        <a href="my-orders">My Orders</a>
-        <a href="login.jsp">Login</a>
-        <a href="register.jsp">Register</a>
-
-    </div>
-
-    <p class="copyright">
-
-        &copy; 2026 Sole Mate. All rights reserved.
-
-    </p>
-
-</footer>
+    <jsp:include page="/includes/footer.jsp" />
 
 </body>
 </html>

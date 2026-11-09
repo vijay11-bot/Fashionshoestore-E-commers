@@ -1,35 +1,49 @@
 package com.fashionshoestore.model;
 
-public class OrderItem {
+import java.io.Serializable;
 
-    private int id;
+public class OrderItem implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private int orderItemId;
     private int orderId;
     private int productId;
-    private int quantity;
-    private double price;
-
-    // Joined fields for display
     private String productName;
-    private String productImage;
-    private Product product;
+    private int quantity;
+    private double unitPrice;
+    private double subtotal;
+    private String sizeLabel;
+    private String imageUrl;
 
     public OrderItem() {
     }
 
-    public OrderItem(int id, int orderId, int productId, int quantity, double price) {
-        this.id = id;
+    public OrderItem(int orderItemId, int orderId, int productId, String productName,
+                     int quantity, double unitPrice, double subtotal, String sizeLabel) {
+        this.orderItemId = orderItemId;
         this.orderId = orderId;
         this.productId = productId;
+        this.productName = productName;
         this.quantity = quantity;
-        this.price = price;
+        this.unitPrice = unitPrice;
+        this.subtotal = subtotal;
+        this.sizeLabel = sizeLabel;
+    }
+
+    public int getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(int orderItemId) {
+        this.orderItemId = orderItemId;
     }
 
     public int getId() {
-        return id;
+        return orderItemId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.orderItemId = id;
     }
 
     public int getOrderId() {
@@ -48,22 +62,6 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public String getProductName() {
         return productName;
     }
@@ -72,19 +70,52 @@ public class OrderItem {
         this.productName = productName;
     }
 
-    public String getProductImage() {
-        return productImage;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public Product getProduct() {
-        return product;
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    // Compatibility getter
+    public double getPrice() {
+        return unitPrice;
+    }
+
+    public void setPrice(double price) {
+        this.unitPrice = price;
+    }
+
+    public double getSubtotal() {
+        return subtotal > 0 ? subtotal : Math.round((unitPrice * quantity) * 100.0) / 100.0;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public String getSizeLabel() {
+        return sizeLabel;
+    }
+
+    public void setSizeLabel(String sizeLabel) {
+        this.sizeLabel = sizeLabel;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

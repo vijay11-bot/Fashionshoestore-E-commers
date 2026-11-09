@@ -1735,3 +1735,88 @@ footer {
 
     background: #a06b45;
 }
+
+/* =========================================================
+   CART BUTTON & BADGE
+   ========================================================= */
+.cart-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: #222 !important;
+    color: #fff !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    transition: background 0.2s ease;
+}
+
+.cart-btn:hover {
+    background: #8a5a2b !important;
+}
+
+.cart-btn .badge {
+    background: #e74c3c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    line-height: 1;
+}
+
+/* =========================================================
+   FOOTER STYLING
+   ========================================================= */
+.site-footer {
+    background: #241c18;
+    color: #f7f3ee;
+    padding: 50px 20px 30px;
+    margin-top: 60px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-logo h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.footer-logo p {
+    color: #b5a59a;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.footer-links a {
+    color: #d5c8be;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.site-footer .copyright {
+    color: #8c7c72;
+    font-size: 13px;
+    border-top: 1px solid #3d3028;
+    padding-top: 25px;
+}

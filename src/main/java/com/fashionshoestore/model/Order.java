@@ -1,36 +1,52 @@
 package com.fashionshoestore.model;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    private int id;
+    private int orderId;
     private int userId;
+    private Timestamp orderDate;
     private double totalAmount;
-    private String status;
     private String paymentMethod;
-    private String orderDate;
-    private List<OrderItem> items;
+    private String orderStatus;
+    private String deliveryAddress;
+
+    private String customerName;
+    private List<OrderItem> items = new ArrayList<>();
 
     public Order() {
     }
 
-    public Order(int id, int userId, double totalAmount,
-                 String status, String paymentMethod, String orderDate) {
-        this.id = id;
+    public Order(int orderId, int userId, Timestamp orderDate, double totalAmount,
+                 String paymentMethod, String orderStatus, String deliveryAddress) {
+        this.orderId = orderId;
         this.userId = userId;
-        this.totalAmount = totalAmount;
-        this.status = status;
-        this.paymentMethod = paymentMethod;
         this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.orderStatus = orderStatus;
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getId() {
-        return id;
+        return orderId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.orderId = id;
     }
 
     public int getUserId() {
@@ -41,20 +57,20 @@ public class Order {
         this.userId = userId;
     }
 
+    public Timestamp getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Timestamp orderDate) {
+        this.orderDate = orderDate;
+    }
+
     public double getTotalAmount() {
         return totalAmount;
     }
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getPaymentMethod() {
@@ -65,12 +81,36 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getOrderDate() {
-        return orderDate;
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getStatus() {
+        return orderStatus;
+    }
+
+    public void setStatus(String status) {
+        this.orderStatus = status;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public List<OrderItem> getItems() {

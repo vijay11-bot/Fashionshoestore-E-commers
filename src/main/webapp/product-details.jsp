@@ -1,679 +1,422 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
 <%@ page import="com.fashionshoestore.model.Product" %>
-
-<%
-    com.fashionshoestore.model.User loggedUser =
-        (com.fashionshoestore.model.User)
-        session.getAttribute("user");
-%>
-
+<%@ page import="com.fashionshoestore.model.ProductSize" %>
+<%@ page import="com.fashionshoestore.model.User" %>
 <%
     Product product = (Product) request.getAttribute("product");
-
     if (product == null) {
-        response.sendRedirect("products");
+        response.sendRedirect(request.getContextPath() + "/products");
         return;
     }
-
-   
+    List<Product> relatedProducts = (List<Product>) request.getAttribute("relatedProducts");
+    List<ProductSize> sizes = product.getSizes();
 %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title><%= product.getName() %> | Sole Mate</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.getProductName() %> | Sole Mate</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .details-container {
+            max-width: 1200px;
+            margin: 40px auto 80px;
+            padding: 0 20px;
         }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f7f3ee;
-            color: #2d2926;
+        .breadcrumb {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 25px;
         }
-
-        /* NAVBAR */
-
-        .navbar {
-            height: 78px;
-            background: #fffdf9;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6%;
-            border-bottom: 1px solid #e8e0d7;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .breadcrumb a {
+            color: #555;
             text-decoration: none;
-            color: #2d2926;
         }
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            border: 1px solid #2d2926;
+        .breadcrumb a:hover {
+            color: #222;
+        }
+        .product-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+        }
+        @media (max-width: 850px) {
+            .product-main {
+                grid-template-columns: 1fr;
+            }
+        }
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .main-img-box {
+            width: 100%;
+            height: 440px;
+            background: #f7f3ee;
+            border-radius: 12px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 1px;
         }
-
-        .logo-text h2 {
-            font-size: 18px;
-            letter-spacing: 2px;
+        .main-img-box img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
         }
-
-        .logo-text span {
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: #8b8179;
+        .main-img-box img:hover {
+            transform: scale(1.05);
         }
-
-        nav {
-            display: flex;
-            gap: 25px;
+        .product-info-panel h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 34px;
+            color: #222;
+            margin-bottom: 10px;
         }
-
-        nav a {
-            text-decoration: none;
-            color: #514a45;
+        .category-tag {
+            display: inline-block;
             font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #8a5a2b;
+            background: #fdf5ec;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 18px;
         }
-
-        nav a:hover {
-            color: #a06b45;
-        }
-
-        .nav-account {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .user-menu {
+        .price-box {
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-bottom: 20px;
         }
-
-        .user-name {
+        .final-price {
+            font-size: 30px;
+            font-weight: 700;
+            color: #222;
+        }
+        .original-price {
+            font-size: 20px;
+            color: #999;
+            text-decoration: line-through;
+        }
+        .discount-pill {
+            background: #e74c3c;
+            color: #fff;
             font-size: 13px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .product-desc {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        .size-section {
+            margin-bottom: 25px;
+        }
+        .size-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .size-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .size-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .size-btn {
+            padding: 10px 18px;
+            border: 1.5px solid #d5c8be;
+            background: #fff;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        .nav-account-link {
-            text-decoration: none;
-            color: #2d2926;
-            font-size: 12px;
-            font-weight: 600;
+        .size-btn:hover {
+            border-color: #222;
         }
-
-        .nav-account-link:hover {
-            color: #a06b45;
+        .size-btn.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
         }
-
-        .nav-icon {
-            color: #2d2926;
+        .size-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        .qty-row {
             display: flex;
             align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
         }
-
-        .nav-icon:hover {
-            color: #a06b45;
+        .qty-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #333;
         }
-
-        /* BREADCRUMB */
-
-        .breadcrumb {
-            max-width: 1200px;
-            margin: 30px auto 0;
-            padding: 0 30px;
-            font-size: 13px;
-            color: #8a817a;
+        .qty-stepper {
+            display: flex;
+            align-items: center;
+            border: 1.5px solid #d5c8be;
+            border-radius: 8px;
+            overflow: hidden;
         }
-
-        .breadcrumb a {
-            color: #6c625b;
-            text-decoration: none;
-        }
-
-        /* PRODUCT */
-
-        .product-container {
-            max-width: 1200px;
-            margin: 30px auto 80px;
-            padding: 0 30px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 70px;
-            align-items: start;
-        }
-
-        .product-image {
-            background: #eee8e0;
-            min-height: 560px;
+        .qty-btn {
+            background: #f7f3ee;
+            border: none;
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
-
-        .product-image img {
-            width: 100%;
-            height: 560px;
-            object-fit: cover;
-            transition: transform 0.4s ease;
+        .qty-btn:hover {
+            background: #e8ded4;
         }
-
-        .product-image:hover img {
-            transform: scale(1.03);
-        }
-
-        .product-info {
-            padding-top: 25px;
-        }
-
-        .category {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #a06b45;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .product-info h1 {
-            font-family: Georgia, serif;
-            font-size: 42px;
-            line-height: 1.15;
-            font-weight: 400;
-            margin-bottom: 18px;
-        }
-
-        .description {
-            color: #716963;
-            font-size: 15px;
-            line-height: 1.8;
-            margin-bottom: 25px;
-        }
-
-        .price {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 25px;
-        }
-
-        .divider {
-            height: 1px;
-            background: #ddd4ca;
-            margin: 25px 0;
-        }
-
-        .availability {
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .available {
-            color: #4d7654;
-            font-weight: 600;
-        }
-
-        .out-stock {
-            color: #a44b43;
-            font-weight: 600;
-        }
-
-        .quantity-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .quantity {
-            width: 90px;
-            height: 45px;
-            border: 1px solid #cfc5ba;
-            background: white;
-            padding: 0 12px;
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-
-        .add-cart-btn {
-            width: 100%;
-            height: 54px;
+        .qty-input {
+            width: 45px;
+            height: 38px;
             border: none;
-            background: #2d2926;
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: 0.3s ease;
-        }
-
-        .add-cart-btn:hover {
-            background: #a06b45;
-        }
-
-        .disabled-btn {
-            background: #aaa29b;
-            cursor: not-allowed;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 25px;
-            color: #514a45;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .back-link:hover {
-            color: #a06b45;
-        }
-
-        /* DETAILS */
-
-        .details-box {
-            border-top: 1px solid #ddd4ca;
-            margin-top: 30px;
-            padding-top: 25px;
-        }
-
-        .details-box h3 {
-            font-size: 14px;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-
-        .details-box p {
-            color: #716963;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        /* FOOTER */
-
-        footer {
-            background: #2d2926;
-            color: #eee7df;
-            padding: 45px 6%;
             text-align: center;
+            font-size: 15px;
+            font-weight: 600;
         }
-
-        footer h3 {
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+        .btn-add-cart {
+            width: 100%;
+            background: #222;
+            color: #fff;
+            padding: 16px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s ease;
         }
-
-        footer p {
-            color: #bcb3aa;
-            font-size: 13px;
+        .btn-add-cart:hover {
+            background: #8a5a2b;
         }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 900px) {
-
-            nav {
-                display: none;
-            }
-
-            .product-container {
-                grid-template-columns: 1fr;
-                gap: 35px;
-            }
-
-            .product-image,
-            .product-image img {
-                min-height: 450px;
-                height: 450px;
-            }
-
-            .product-info {
-                padding-top: 0;
-            }
-
+        .related-section {
+            margin-top: 70px;
         }
-
-        @media (max-width: 550px) {
-
-            .navbar {
-                padding: 0 20px;
-            }
-
-            .user-name,
-            .nav-account-link {
-                display: none;
-            }
-
-            .breadcrumb {
-                padding: 0 20px;
-            }
-
-            .product-container {
-                padding: 0 20px;
-            }
-
-            .product-info h1 {
-                font-size: 32px;
-            }
-
+        .related-section h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            margin-bottom: 25px;
         }
-
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .card-img-box {
+            height: 200px;
+            background: #fdfaf6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .card-img-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .card-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .card-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+            margin-top: auto;
+        }
     </style>
-
 </head>
-
 <body>
 
-<!-- ================= NAVBAR ================= -->
+    <jsp:include page="/includes/navbar.jsp" />
 
-<!-- ================= COMMON HEADER ================= -->
+    <div class="details-container">
+        <div class="breadcrumb">
+            <a href="<%= request.getContextPath() %>/home">Home</a> &gt;
+            <a href="<%= request.getContextPath() %>/products">Shop</a> &gt;
+            <a href="<%= request.getContextPath() %>/products?category=<%= product.getCategory() %>"><%= product.getCategory() %></a> &gt;
+            <span><%= product.getProductName() %></span>
+        </div>
 
-<header class="site-header">
-
-    <div class="header-container">
-
-        <!-- LOGO -->
-        <a href="index.jsp" class="active">
-
-            <div class="brand-box">
-                SM
+        <div class="product-main">
+            <!-- Left: Gallery -->
+            <div class="product-gallery">
+                <div class="main-img-box">
+                    <img src="<%= request.getContextPath() %>/<%= product.getImageUrl() %>" alt="<%= product.getProductName() %>" id="mainImage">
+                </div>
             </div>
 
-            <div class="brand-text">
+            <!-- Right: Details & Add to Cart -->
+            <div class="product-info-panel">
+                <span class="category-tag"><%= product.getCategory() %> Footwear</span>
+                <h1><%= product.getProductName() %></h1>
 
-                <div class="brand-name">
-                    SOLE MATE
+                <div class="price-box">
+                    <span class="final-price">&#8377;<%= String.format("%.2f", product.getDiscountedPrice()) %></span>
+                    <% if (product.getDiscountPercent() > 0) { %>
+                        <span class="original-price">&#8377;<%= String.format("%.2f", product.getPrice()) %></span>
+                        <span class="discount-pill"><%= (int) product.getDiscountPercent() %>% OFF</span>
+                    <% } %>
                 </div>
 
-                <div class="brand-tagline">
-                    STEP INTO STYLE
-                </div>
+                <p class="product-desc"><%= product.getDescription() %></p>
 
+                <form action="<%= request.getContextPath() %>/cart/add" method="POST" id="addToCartForm">
+                    <input type="hidden" name="productId" value="<%= product.getProductId() %>">
+                    
+                    <!-- SHOE SIZES SELECTOR -->
+                    <div class="size-section">
+                        <div class="size-header">
+                            <span class="size-title">Select Shoe Size</span>
+                            <span style="font-size: 13px; color: #888;">Size Guide: Standard UK</span>
+                        </div>
+                        <div class="size-grid" id="sizeGrid">
+                            <%
+                                String defaultSize = (sizes != null && !sizes.isEmpty()) ? sizes.get(0).getSizeLabel() : "UK 8";
+                                if (sizes != null && !sizes.isEmpty()) {
+                                    for (int i = 0; i < sizes.size(); i++) {
+                                        ProductSize ps = sizes.get(i);
+                                        boolean isAvailable = ps.isAvailable() && ps.getStockQuantity() > 0;
+                            %>
+                                <button type="button" 
+                                        class="size-btn <%= (i == 0 && isAvailable) ? "active" : "" %> <%= !isAvailable ? "disabled" : "" %>"
+                                        onclick="selectSize('<%= ps.getSizeLabel() %>', this)"
+                                        <%= !isAvailable ? "disabled" : "" %>>
+                                    <%= ps.getSizeLabel() %>
+                                </button>
+                            <%
+                                    }
+                                } else {
+                            %>
+                                <button type="button" class="size-btn active" onclick="selectSize('UK 8', this)">UK 8</button>
+                                <button type="button" class="size-btn" onclick="selectSize('UK 9', this)">UK 9</button>
+                                <button type="button" class="size-btn" onclick="selectSize('UK 10', this)">UK 10</button>
+                            <% } %>
+                        </div>
+                        <input type="hidden" name="sizeLabel" id="selectedSizeInput" value="<%= defaultSize %>">
+                    </div>
+
+                    <!-- QUANTITY -->
+                    <div class="qty-row">
+                        <span class="qty-label">Quantity:</span>
+                        <div class="qty-stepper">
+                            <button type="button" class="qty-btn" onclick="changeQty(-1)">-</button>
+                            <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="10" class="qty-input" readonly>
+                            <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-add-cart">&#128722; Add to Cart</button>
+                </form>
             </div>
-
-        </a>
-
-
-        <!-- NAVIGATION -->
-
-        <nav class="main-nav">
-
-            <a href="index.jsp">
-                HOME
-            </a>
-
-            <a href="products">
-                SHOP
-            </a>
-
-            <a href="products?category=Men">
-                MEN
-            </a>
-
-            <a href="products?category=Women">
-                WOMEN
-            </a>
-
-            <a href="products?category=Kids">
-                KIDS
-            </a>
-
-            <a href="products">
-                NEW ARRIVALS
-            </a>
-
-            <a href="products">
-                SALE
-            </a>
-
-        </nav>
-
-
-        <!-- ACCOUNT -->
-
-        <div class="header-actions">
-
-            <% if (loggedUser != null) { %>
-
-                <span class="header-user">
-                    Hi, <%= loggedUser.getName() %>
-                </span>
-
-                <a href="my-orders">
-                    My Orders
-                </a>
-
-                <a href="wishlist">
-                    Wishlist
-                </a>
-
-                <a href="logout">
-                    Logout
-                </a>
-
-            <% } else { %>
-
-                <a href="login.jsp">
-                    Login
-                </a>
-
-                <a href="register.jsp">
-                    Register
-                </a>
-
-            <% } %>
-
-            <a href="cart">
-                Cart
-            </a>
-
         </div>
 
-    </div>
-
-</header>
-
-
-<!-- ================= BREADCRUMB ================= -->
-
-<div class="breadcrumb">
-
-    <a href="products">Shop</a>
-
-    &nbsp; / &nbsp;
-
-    <%= product.getCategory() %>
-
-    &nbsp; / &nbsp;
-
-    <%= product.getName() %>
-
-</div>
-
-
-<!-- ================= PRODUCT ================= -->
-
-<section class="product-container">
-
-
-    <!-- PRODUCT IMAGE -->
-
-    <div class="product-image">
-
-        <img src="<%= request.getContextPath() %>/images/<%= product.getImage() %>"
-             alt="<%= product.getName() %>">
-
-    </div>
-
-
-    <!-- PRODUCT INFORMATION -->
-
-    <div class="product-info">
-
-        <div class="category">
-            <%= product.getCategory() %>
-        </div>
-
-
-        <h1>
-            <%= product.getName() %>
-        </h1>
-
-
-        <p class="description">
-            <%= product.getDescription() %>
-        </p>
-
-
-        <div class="price">
-
-            &#8377;<%= String.format("%.2f", product.getPrice()) %>
-
-        </div>
-
-
-        <div class="divider"></div>
-
-
-        <!-- STOCK -->
-
-        <div class="availability">
-
-            <% if (product.getQuantity() > 0) { %>
-
-                <span class="available">
-                    &#10003; In Stock
-                </span>
-
-            <% } else { %>
-
-                <span class="out-stock">
-                    Out of Stock
-                </span>
-
-            <% } %>
-
-        </div>
-
-
-        <!-- ADD TO CART -->
-
-        <% if (product.getQuantity() > 0) { %>
-
-            <form action="cart" method="post">
-
-                <input type="hidden"
-                       name="productId"
-                       value="<%= product.getId() %>">
-
-                <label class="quantity-label">
-                    Quantity
-                </label>
-
-                <input type="number"
-                       name="quantity"
-                       class="quantity"
-                       value="1"
-                       min="1"
-                       max="<%= product.getQuantity() %>"
-                       required>
-
-                <button type="submit"
-                        class="add-cart-btn">
-
-                    ADD TO CART
-
-                </button>
-
-            </form>
-
-        <% } else { %>
-
-            <button class="add-cart-btn disabled-btn"
-                    disabled>
-
-                OUT OF STOCK
-
-            </button>
-
+        <!-- RELATED PRODUCTS -->
+        <% if (relatedProducts != null && !relatedProducts.isEmpty()) { %>
+            <div class="related-section">
+                <h2>You May Also Like</h2>
+                <div class="products-grid">
+                    <%
+                        int count = 0;
+                        for (Product rp : relatedProducts) {
+                            if (rp.getProductId() != product.getProductId() && count < 4) {
+                                count++;
+                    %>
+                        <a href="<%= request.getContextPath() %>/product-details?id=<%= rp.getProductId() %>" class="product-card">
+                            <div class="card-img-box">
+                                <img src="<%= request.getContextPath() %>/<%= rp.getImageUrl() %>" alt="<%= rp.getProductName() %>">
+                            </div>
+                            <div class="card-body">
+                                <div class="card-title"><%= rp.getProductName() %></div>
+                                <div class="card-price">&#8377;<%= String.format("%.2f", rp.getDiscountedPrice()) %></div>
+                            </div>
+                        </a>
+                    <%
+                            }
+                        }
+                    %>
+                </div>
+            </div>
         <% } %>
-
-
-        <a href="products"
-           class="back-link">
-
-            &#8592; Continue Shopping
-
-        </a>
-
-
-        <!-- PRODUCT DETAILS -->
-
-        <div class="details-box">
-
-            <h3>PRODUCT DETAILS</h3>
-
-            <p>
-                Category:
-                <strong><%= product.getCategory() %></strong>
-            </p>
-
-            <p>
-                Available Quantity:
-                <strong><%= product.getQuantity() %></strong>
-            </p>
-
-            <p>
-                Product ID:
-                <strong>#<%= product.getId() %></strong>
-            </p>
-
-        </div>
-
     </div>
 
-</section>
+    <jsp:include page="/includes/footer.jsp" />
 
+    <script>
+        function selectSize(size, btn) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('selectedSizeInput').value = size;
+        }
 
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-    <h3>SOLE MATE</h3>
-
-    <p>
-        Step into style. Walk with confidence.
-    </p>
-
-</footer>
-
+        function changeQty(delta) {
+            const input = document.getElementById('qtyInput');
+            let val = parseInt(input.value) || 1;
+            val = Math.max(1, Math.min(10, val + delta));
+            input.value = val;
+        }
+    </script>
 </body>
 </html>

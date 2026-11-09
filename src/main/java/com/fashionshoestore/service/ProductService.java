@@ -3,6 +3,7 @@ package com.fashionshoestore.service;
 import java.util.List;
 import com.fashionshoestore.dao.ProductDAO;
 import com.fashionshoestore.model.Product;
+import com.fashionshoestore.model.ProductSize;
 
 public class ProductService {
 
@@ -12,19 +13,27 @@ public class ProductService {
         return productDAO.getAllProducts();
     }
 
-    public List<Product> getProducts(String category, String type, String search) {
-        return productDAO.getProducts(category, type, search);
+    public List<Product> getProductsByCategory(int categoryId) {
+        return productDAO.getProductsByCategory(categoryId);
     }
 
-    public List<Product> searchProducts(String search, String category) {
-        return productDAO.searchProducts(search, category);
-    }
-
-    public List<Product> getNewArrivals(int limit) {
-        return productDAO.getNewArrivals(limit);
+    public List<Product> getProductsByCategoryName(String categoryName) {
+        return productDAO.getProductsByCategoryName(categoryName);
     }
 
     public Product getProductById(int id) {
         return productDAO.getProductById(id);
+    }
+
+    public List<ProductSize> getSizesByProductId(int productId) {
+        return productDAO.getSizesByProductId(productId);
+    }
+
+    public List<Product> getFeaturedProducts(int limit) {
+        return productDAO.getFeaturedProducts(limit);
+    }
+
+    public List<Product> filterProducts(Integer categoryId, String search, Double minPrice, Double maxPrice, String sort) {
+        return productDAO.filterProducts(categoryId, search, minPrice, maxPrice, sort);
     }
 }

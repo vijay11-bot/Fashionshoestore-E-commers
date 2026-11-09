@@ -3,45 +3,34 @@ package com.fashionshoestore.service;
 import java.util.List;
 import com.fashionshoestore.dao.CartDAO;
 import com.fashionshoestore.model.Cart;
+import com.fashionshoestore.model.CartItem;
 
 public class CartService {
 
     private CartDAO cartDAO = new CartDAO();
 
-    public boolean addToCart(Cart cart) {
-        return cartDAO.addToCart(cart);
+    public Cart getOrCreateCart(int userId) {
+        return cartDAO.getOrCreateCart(userId);
     }
 
-    public List<Cart> getCartItems(int userId) {
-        return cartDAO.getCartItems(userId);
+    public List<CartItem> getCartItems(int cartId) {
+        return cartDAO.getCartItems(cartId);
     }
 
-    public Cart getCartById(int cartId) {
-        return cartDAO.getCartById(cartId);
+    public boolean addItem(int userId, int productId, String sizeLabel, int quantity, double unitPrice) {
+        return cartDAO.addItem(userId, productId, sizeLabel, quantity, unitPrice);
     }
 
-    public boolean updateQuantity(int cartId, int quantity) {
-        return cartDAO.updateQuantity(cartId, quantity);
+    public boolean updateQuantity(int cartItemId, int quantity) {
+        return cartDAO.updateQuantity(cartItemId, quantity);
     }
 
-    public boolean deleteCartItem(int cartId) {
-        return cartDAO.deleteCartItem(cartId);
+    public boolean removeItem(int cartItemId) {
+        return cartDAO.removeItem(cartItemId);
     }
 
-    public boolean removeFromCart(int cartId) {
-        return cartDAO.deleteCartItem(cartId);
-    }
-
-    public boolean removeFromCart(int userId, int productId) {
-        return cartDAO.removeFromCart(userId, productId);
-    }
-
-    public boolean clearCart(int userId) {
-        return cartDAO.clearCart(userId);
-    }
-
-    public double getCartTotal(int userId) {
-        return cartDAO.getCartTotal(userId);
+    public boolean clearCart(int cartId) {
+        return cartDAO.clearCart(cartId);
     }
 
     public int getCartCount(int userId) {

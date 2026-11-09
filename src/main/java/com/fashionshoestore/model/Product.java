@@ -1,46 +1,94 @@
 package com.fashionshoestore.model;
 
-public class Product {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    private int id;
-    private String name;
+public class Product implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private int productId;
+    private int categoryId;
+    private String categoryName;
+    private String productName;
     private String description;
     private double price;
-    private int quantity;
-    private String category;
-    private String type;
-    private String image;
+    private double discountPercent;
+    private String imageUrl;
+    private boolean isActive;
+    private List<ProductSize> sizes = new ArrayList<>();
 
     public Product() {
     }
 
-    public Product(int id, String name, String description,
-                   double price, int quantity,
-                   String category, String type, String image) {
-        this.id = id;
-        this.name = name;
+    public Product(int productId, int categoryId, String productName, String description,
+                   double price, double discountPercent, String imageUrl, boolean isActive) {
+        this.productId = productId;
+        this.categoryId = categoryId;
+        this.productName = productName;
         this.description = description;
         this.price = price;
-        this.quantity = quantity;
-        this.category = category;
-        this.type = type;
-        this.image = image;
+        this.discountPercent = discountPercent;
+        this.imageUrl = imageUrl;
+        this.isActive = isActive;
     }
 
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    // JSP convenience aliases
     public int getId() {
-        return id;
+        return productId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.productId = id;
     }
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getCategory() {
+        return categoryName != null ? categoryName : "";
+    }
+
+    public void setCategory(String category) {
+        this.categoryName = category;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    // JSP convenience alias
     public String getName() {
-        return name;
+        return productName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.productName = name;
     }
 
     public String getDescription() {
@@ -59,35 +107,51 @@ public class Product {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public double getDiscountPercent() {
+        return discountPercent;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setDiscountPercent(double discountPercent) {
+        this.discountPercent = discountPercent;
     }
 
-    public String getCategory() {
-        return category;
+    public double getDiscountedPrice() {
+        if (discountPercent > 0) {
+            return Math.round((price * (1.0 - (discountPercent / 100.0))) * 100.0) / 100.0;
+        }
+        return price;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public String getType() {
-        return type;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
+    // JSP convenience alias
     public String getImage() {
-        return image;
+        return imageUrl;
     }
 
     public void setImage(String image) {
-        this.image = image;
+        this.imageUrl = image;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public List<ProductSize> getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(List<ProductSize> sizes) {
+        this.sizes = sizes;
     }
 }
